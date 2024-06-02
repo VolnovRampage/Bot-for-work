@@ -13,7 +13,7 @@ from callbacks.callbacks import callback_router
 TOKEN: str = os.getenv("TOKEN")
 NGROK: str  = os.getenv("NGROK")
 WEBHOOK_URL: str = f'{NGROK}/{TOKEN}'
-PORT: int = int(os.getenv('PORT'))
+PORT_NGROK: int = int(os.getenv('PORT_NGROK'))
 
 
 bot: Bot = Bot(token=TOKEN)
@@ -52,4 +52,4 @@ app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)
 
 if __name__ == "__main__":
-    web.run_app(app=app, host='0.0.0.0', port=PORT)
+    web.run_app(app=app, host='0.0.0.0', port=PORT_NGROK)
