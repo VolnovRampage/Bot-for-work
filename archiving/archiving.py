@@ -1,6 +1,7 @@
 import zipfile
 import os
 import aiofiles
+import asyncio
 
 from tqdm.asyncio import tqdm
 
@@ -12,6 +13,7 @@ start_path: str = '/Users/rampage/Desktop/'
 
 
 async def create_archive() -> None:
+    os.makedirs(path_to_archive, exist_ok=True)
     with zipfile.ZipFile(
         file= path_to_zip, mode='w',
         compression=zipfile.ZIP_DEFLATED, compresslevel=9
@@ -31,3 +33,8 @@ async def create_archive() -> None:
 async def extract_archive()  -> None:
     with zipfile.ZipFile(file=path_to_zip) as zip:
         zip.extractall(path=path_to_archive)
+
+
+async def delete_archive():
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, os.remove, path_to_zip)

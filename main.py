@@ -1,5 +1,4 @@
 import os
-import asyncio
 
 from aiohttp import web
 from dotenv import load_dotenv, find_dotenv
@@ -14,6 +13,7 @@ from callbacks.callbacks import callback_router
 TOKEN: str = os.getenv("TOKEN")
 NGROK: str  = os.getenv("NGROK")
 WEBHOOK_URL: str = f'{NGROK}/{TOKEN}'
+PORT: int = int(os.getenv('PORT'))
 
 
 bot: Bot = Bot(token=TOKEN)
@@ -52,4 +52,4 @@ app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)
 
 if __name__ == "__main__":
-    web.run_app(app=app, host='0.0.0.0', port=2211)
+    web.run_app(app=app, host='0.0.0.0', port=PORT)

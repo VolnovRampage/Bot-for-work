@@ -1,7 +1,7 @@
 import os
 
 from aiogram import F, Router, types
-from archiving.archiving import create_archive, extract_archive
+from archiving.archiving import create_archive, extract_archive, delete_archive
 
 
 ADMINS: list = [int(id) for id in os.getenv("ADMINS").split(",")]
@@ -17,5 +17,6 @@ async def backup(call: types.CallbackQuery):
         await call.message.edit_text('Архивация закончена')
         await extract_archive()
         await call.message.edit_text('Распаковка закончена')
+        await delete_archive()
     else:
         await call.message.edit_text('У вас нет прав на это')
