@@ -1,39 +1,21 @@
-import os
-import asyncio
 import asyncssh
-import logging
+import os
 
-logging.basicConfig(level=logging.INFO)
+from .transfer import transfer_file
+from archiving.archiving import path_to_zip
 
-# Получаем параметры из окружения
+
 IP_SERVER = os.getenv('IP_SERVER')
-PORT_SSH = int(os.getenv('PORT_SSH', '22'))
+PORT_SSH = int(os.getenv('PORT_SSH'))  # Замените на ваш порт
 USER = os.getenv('USER')
-PASSWORD = os.getenv('PASSWORD')
-LOCAL_PORT = int(os.getenv('LOCAL_PORT', '22'))
-REMOTE_PORT = int(os.getenv('REMOTE_PORT', '80'))
+REMOTE_PATH: str = '/home/expert/Desktop/'
 
-async def forward_tunnel(local_port, remote_host, remote_port, ssh_host, ssh_port, ssh_user, ssh_password):
-    async with asyncssh.connect(
-            ssh_host, port=ssh_port, username=ssh_user, password=ssh_password
-    ) as conn:
-        # Создаём туннель
-        forwarder = await conn.forward_local_port('', local_port, remote_host, remote_port)
-        try:
-            await forwarder.wait_closed()
-        except Exception as e:
-            logging.error(f"Error occurred in tunnel: {e}")
 
-async def main():
-    await forward_tunnel(
-        LOCAL_PORT,  # Локальный порт
-        '127.0.0.1', # Удалённый хост
-        REMOTE_PORT, # Удалённый порт
-        IP_SERVER,   # SSH сервер
-        PORT_SSH,    # SSH порт
-        USER,        # SSH пользователь
-        PASSWORD     # SSH пароль
-    )
-
-if __name__ == '__main__':
-    asyncio.run(main())
+async def connect_ssh():
+    try:
+        # Подключение к серверу
+        async with asyncssh.connect(host=IP_SERVER, port=PORT_SSH, username=USER) as conn:
+            await transfer_file(conn=conn, local_path=path_to_zip, remote_path=REMOTE_PATH)
+            return True
+    except (OSError, asyncssh.Error) as exc:
+        return f'Ошибка подключения: {exc}'

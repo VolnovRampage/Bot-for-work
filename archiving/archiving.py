@@ -8,8 +8,8 @@ from tqdm.asyncio import tqdm
 
 path_to_archive: str = os.path.join(os.getcwd(), 'archive')
 path_to_zip: str = os.path.join(path_to_archive, 'archive.zip')
-path: str = '/Users/rampage/Desktop/test/'
-start_path: str = '/Users/rampage/Desktop/'
+path: str = 'E:\\adb'
+start_path: str = 'E:\\'
 
 
 async def create_archive() -> None:
