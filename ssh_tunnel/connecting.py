@@ -1,5 +1,4 @@
 import asyncssh
-import asyncio
 import os
 from dotenv import load_dotenv, find_dotenv
 
@@ -9,31 +8,38 @@ IP_SERVER = os.getenv('IP_SERVER')
 PORT_SSH = os.getenv('PORT_SSH')
 USER = os.getenv('USER')
 PASSWORD = os.getenv('PASSWORD')
+PATH_TO_SOURCE = os.getenv('PATH_TO_SOURCE')
+PATH_TO_ARCHIVE = os.getenv('PATH_TO_ARCHIVE')
+PATH_TO_DESTINATION = os.getenv('PATH_TO_DESTINATION')
 
-# Отладочная печать переменных окружения
-print(f"IP_SERVER: {IP_SERVER}")
-print(f"PORT_SSH: {PORT_SSH}")
-print(f"USER: {USER}")
-print(f"PASSWORD: {PASSWORD}")
+
+async def create_archive(conn:asyncssh):
+    create_archive = f'7z a {PATH_TO_ARCHIVE} {PATH_TO_SOURCE}'
+    await conn.run(create_archive, check=True)
+    return conn
+
+
+async def send_archive(conn:asyncssh):
+    async with conn.start_sftp_client() as sftp:
+        remote_path = PATH_TO_ARCHIVE.replace('\\', '/')
+        local_path = os.path.join(PATH_TO_DESTINATION, os.path.basename(PATH_TO_ARCHIVE)).replace('\\', '/')
+        await sftp.get(remote_path, local_path)
+
+
+def measurement_file():
+    file_size = os.path.getsize(os.path.join(PATH_TO_DESTINATION, os.path.basename(PATH_TO_ARCHIVE)))
+    return file_size / (1024 ** 3)
+
 
 async def connect_via_ssh():
     try:
-        print("Попытка подключения к серверу...")
         async with asyncssh.connect(host=IP_SERVER, port=int(PORT_SSH), username=USER, password=PASSWORD) as conn:
-            print("Подключение успешно. Выполнение команды...")
-
-            # Команда для создания папки на рабочем столе Windows
-            create_folder_command = r'mkdir "c:\Users\karpovicha\Desktop\TEST"'  # Используем сырые строки (raw strings), чтобы избежать экранирования обратных слешей
-
-            # Выполнение команды для создания папки
-            result = await conn.run(create_folder_command, check=True)
-            print("Команда выполнена успешно. Результат:")
-            print(result.stdout)
+            await create_archive(conn=conn)
+            await send_archive(conn=conn)
+            return True
     except asyncssh.PermissionDenied:
-        print("Permission denied: Проверьте правильность имени пользователя и пароля")
+        return "<b>Permission denied:</b> Проверьте правильность имени пользователя и пароля"
     except asyncssh.Error as e:
-        print(f"Ошибка SSH: {e}")
+        return f"<b>Ошибка SSH:</b> {e}"
     except Exception as e:
-        print(f"Ошибка подключения: {e}")
-
-asyncio.run(connect_via_ssh())
+        return f"<b>Ошибка подключения:</b> {e}"

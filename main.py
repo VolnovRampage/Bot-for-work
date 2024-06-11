@@ -16,7 +16,7 @@ WEBHOOK_URL: str = f'{NGROK}/{TOKEN}'
 PORT_NGROK: int = int(os.getenv('PORT_NGROK'))
 
 
-bot: Bot = Bot(token=TOKEN)
+bot: Bot = Bot(token=TOKEN, parse_mode='HTML')
 dp: Dispatcher = Dispatcher()
 
 dp.include_routers(

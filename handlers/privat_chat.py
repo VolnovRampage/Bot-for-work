@@ -8,4 +8,4 @@ private_chat_router: Router = Router()
 
 @private_chat_router.message(CommandStart)
 async def start_command(message: types.Message):
-    await message.answer(text='Bot works with remote servers', reply_markup=inline_kb.as_markup())
+    await message.answer(text='Вот для создания BackUp sql файлов', reply_markup=inline_kb.as_markup())
