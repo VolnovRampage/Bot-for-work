@@ -1,6 +1,5 @@
 import asyncssh
 import os
-import asyncio
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -56,6 +55,3 @@ async def connect_via_ssh():
         return f"<b>Ошибка SSH:</b> {e}"
     except Exception as e:
         return f"<b>Ошибка подключения:</b> {e}"
-
-
-asyncio.run(connect_via_ssh())
