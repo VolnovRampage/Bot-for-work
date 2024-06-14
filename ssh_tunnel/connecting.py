@@ -1,8 +1,7 @@
 import asyncssh
 import os
-from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv())
+
 # Получение значений переменных окружения
 IP_SERVER = os.getenv("IP_SERVER")
 PORT_SSH = os.getenv("PORT_SSH")
