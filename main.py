@@ -31,7 +31,7 @@ dp.include_routers(
 
 async def schedule_task():
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(backup, CronTrigger(hour=15, minute=4))
+    scheduler.add_job(backup, CronTrigger(hour=16, minute=29))
     scheduler.start()
     try:
         await asyncio.sleep(86400)
