@@ -28,7 +28,7 @@ async def send_archive(conn: asyncssh.SSHClientConnection):
         await sftp.get(remote_path, local_path)
 
 
-def get_file_size():
+def get_file_size() -> float:
     file_size = os.path.getsize(
         os.path.join(PATH_TO_DESTINATION, os.path.basename(PATH_TO_ARCHIVE))
     )
