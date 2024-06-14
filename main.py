@@ -1,4 +1,5 @@
 import os
+import asyncio
 
 from aiohttp import web
 from dotenv import load_dotenv, find_dotenv
@@ -8,6 +9,9 @@ load_dotenv(find_dotenv())
 
 from handlers.privat_chat import private_chat_router
 from callbacks.callbacks import callback_router
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+from callbacks.callbacks import backup
 
 
 TOKEN: str = os.getenv("TOKEN")
@@ -25,9 +29,22 @@ dp.include_routers(
 )
 
 
+async def schedule_task():
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(backup, CronTrigger(hour=15, minute=4))
+    scheduler.start()
+    try:
+        await asyncio.sleep(86400)
+    except asyncio.CancelledError as err:
+        print(err)
+    finally:
+        scheduler.shutdown()
+
+
 async def on_startup(app):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
     await bot.delete_my_commands()
+    asyncio.create_task(schedule_task())
 
 async def on_shutdown(app):
     await bot.delete_webhook(drop_pending_updates=True)

@@ -27,24 +27,27 @@ def make_text(spent_time: float, file_size: float, backup_date: str) -> str:
     return text
 
 
+async def backup():
+    start_time = time.time()
+    result = await connect_via_ssh()
+    backup_date = get_date()
+    if not isinstance(result, str):
+        spent_time = (time.time() - start_time) / 60
+        file_size = get_file_size()
+        text: str = make_text(spent_time=spent_time, file_size=file_size, backup_date=backup_date)
+    else:
+        text: str = f"{result}\n<b>Время и дата:</b>  {backup_date}"
+    await write_log(text=text)
+    return text
+
+
+
 @callback_router.callback_query(F.data == "backup_sql")
-async def backup(call: types.CallbackQuery):
+async def backup_sql(call: types.CallbackQuery):
     if call.from_user.id in ADMINS:
         await call.message.edit_text(text="Начинается BackUp sql файлов")
-        start_time = time.time()
-        result = await connect_via_ssh()
-        backup_date = get_date()
-        if not isinstance(result, str):
-            spent_time = (time.time() - start_time) / 60
-            file_size = get_file_size()
-            text: str = make_text(spent_time=spent_time, file_size=file_size, backup_date=backup_date)
-            await write_log(text=text)
-            await call.message.edit_text(text=text, reply_markup=inline_kb.as_markup())
-        else:
-            text: str = f"{result}\n<b>Время и дата:</b>  {backup_date}"
-            await write_log(text=text)
-            await call.message.edit_text(text=text, reply_markup=inline_kb.as_markup())
-
+        text = await backup()
+        await call.message.edit_text(text=text, reply_markup=inline_kb.as_markup())
     else:
         await call.message.edit_text("У вас нет прав на это.")
 
