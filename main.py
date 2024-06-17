@@ -18,6 +18,8 @@ TOKEN: str = os.getenv("TOKEN")
 NGROK: str  = os.getenv("NGROK")
 WEBHOOK_URL: str = f'{NGROK}/{TOKEN}'
 PORT_NGROK: int = int(os.getenv('PORT_NGROK'))
+HOUR: int = int(os.getenv('HOUR'))
+MINUTE: int = int(os.getenv('MINUTE'))
 
 
 bot: Bot = Bot(token=TOKEN, parse_mode='HTML')
@@ -31,7 +33,7 @@ dp.include_routers(
 
 async def schedule_task():
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(backup, CronTrigger(hour=16, minute=29))
+    scheduler.add_job(backup, CronTrigger(hour=HOUR, minute=MINUTE))
     scheduler.start()
     try:
         await asyncio.sleep(86400)

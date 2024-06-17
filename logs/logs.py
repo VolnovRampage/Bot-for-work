@@ -19,4 +19,4 @@ async def read_log():
             text += line
         return text
     else:
-        return f"Нет записей в логе."
+        return f"<b>Нет записей в логе.</b>"
