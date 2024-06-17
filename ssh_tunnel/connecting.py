@@ -5,7 +5,7 @@ import os
 # Получение значений переменных окружения
 IP_SERVER = os.getenv("IP_SERVER")
 PORT_SSH = int(os.getenv("PORT_SSH"))
-USER = os.getenv("USER")
+USER = os.getenv("USERNAME_FROM_SERVER")
 PASSWORD = os.getenv("PASSWORD")
 PATH_TO_SOURCE = os.getenv("PATH_TO_SOURCE")
 PATH_TO_ARCHIVE = os.getenv("PATH_TO_ARCHIVE")
