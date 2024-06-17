@@ -4,7 +4,7 @@ import os
 
 # Получение значений переменных окружения
 IP_SERVER = os.getenv("IP_SERVER")
-PORT_SSH = os.getenv("PORT_SSH")
+PORT_SSH = int(os.getenv("PORT_SSH"))
 USER = os.getenv("USER")
 PASSWORD = os.getenv("PASSWORD")
 PATH_TO_SOURCE = os.getenv("PATH_TO_SOURCE")
@@ -42,7 +42,7 @@ async def remove_archive(conn: asyncssh.SSHClientConnection):
 async def connect_via_ssh():
     try:
         async with asyncssh.connect(
-            host=IP_SERVER, port=int(PORT_SSH), username=USER, password=PASSWORD
+            host=IP_SERVER, port=PORT_SSH, username=USER, password=PASSWORD
         ) as conn:
             await create_archive(conn=conn)
             await send_archive(conn=conn)
