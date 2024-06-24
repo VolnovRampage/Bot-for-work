@@ -1,25 +1,13 @@
-import os
 import asyncio
 
 from aiohttp import web
-from dotenv import load_dotenv, find_dotenv
 from aiogram import Bot, Dispatcher, types
 
-load_dotenv(find_dotenv())
-
-from handlers.privat_chat import private_chat_router
-from callbacks.callbacks import callback_router
+from load_data import TOKEN, PORT_NGROK, WEBHOOK_URL, HOUR, MINUTE
+from handlers.private_chat import private_chat_router
+from callbacks.callbacks import callback_router, backup
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-from callbacks.callbacks import backup
-
-
-TOKEN: str = os.getenv("TOKEN")
-NGROK: str  = os.getenv("NGROK")
-WEBHOOK_URL: str = f'{NGROK}/{TOKEN}'
-PORT_NGROK: int = int(os.getenv('PORT_NGROK'))
-HOUR: int = int(os.getenv('HOUR'))
-MINUTE: int = int(os.getenv('MINUTE'))
 
 
 bot: Bot = Bot(token=TOKEN, parse_mode='HTML')

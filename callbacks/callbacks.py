@@ -1,5 +1,5 @@
-import os
 import time
+
 
 from datetime import datetime
 from aiogram import F, Router, types
@@ -8,7 +8,8 @@ from ssh_tunnel.connecting import connect_via_ssh, get_file_size
 from keyboards.inline_keyboards import inline_kb
 from logs.logs import write_log, read_log
 
-ADMINS: list = [int(id) for id in os.getenv("ADMINS").split(",")]
+from load_data import ADMINS
+
 
 callback_router = Router()
 
@@ -17,11 +18,11 @@ def get_date() -> str:
     return datetime.now().strftime("%H:%M:%S  |  %d/%m/%Y")
 
 
-def make_text(spent_time: float, file_size: float, backup_date: str) -> str:
+def make_text(spent_time: float, backup_date: str) -> str: # file_size
     text: str = (
         "<b>Backup выполнен:</b>\n"
         f"<i>  -  Затрачено времени:  {spent_time:.2f} минут.</i>\n"
-        f"<i>  -  Передано по проводу:  {file_size:.3f} Гб.</i>\n"
+        # f"<i>  -  Передано по проводу:  {file_size:.3f} Гб.</i>\n"
         f"<i>  -  Время и дата:  {backup_date}.</i>"
     )
     return text
@@ -33,8 +34,8 @@ async def backup():
     backup_date = get_date()
     if not isinstance(result, str):
         spent_time = (time.time() - start_time) / 60
-        file_size = get_file_size()
-        text: str = make_text(spent_time=spent_time, file_size=file_size, backup_date=backup_date)
+        # file_size = get_file_size()
+        text: str = make_text(spent_time=spent_time, backup_date=backup_date) # add file_size=file_size
     else:
         text: str = f"{result}\n<b>Время и дата:</b>  {backup_date}"
     await write_log(text=text)

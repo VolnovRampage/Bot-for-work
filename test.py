@@ -22,6 +22,7 @@ def get_path_to_archive(path_to_source: str, archive_name: str):
 
 async def create_archive(conn: asyncssh.SSHClientConnection, path_to_source: str, archive_name: str):
     path_to_archive: str = get_path_to_archive(path_to_source=path_to_source, archive_name=archive_name)
+    print(path_to_archive)
     create_archive = f"7z a -tzip -mx1 {path_to_archive} {path_to_source}"
     await conn.run(create_archive, check=True)
     return conn
@@ -51,12 +52,11 @@ async def remove_archive(conn: asyncssh.SSHClientConnection, path_to_source: str
 
 async def connect_via_ssh():
     async for data in merge_data():
-        print(data[0], type(data[1]), data[2], data[3])
         try:
             async with asyncssh.connect(
                 host=data[0], port=data[1], username=data[2], password=data[3]
             ) as conn:
-                await create_archive(conn=conn, path_to_source=data[4], archive_name=date[5])
+                await create_archive(conn=conn, path_to_source=data[4], archive_name=data[5])
                 await send_archive(conn=conn, path_to_source=data[4], path_to_destination=data[6], archive_name=data[5])
                 await remove_archive(conn=conn, path_to_source=data[4], archive_name=data[5])
                 return True
@@ -68,5 +68,5 @@ async def connect_via_ssh():
             print(f"<b>Ошибка подключения:</b>\n<i>{e}</i>")
 
 
-if '__name__' == "__main__":
+if __name__ == "__main__":
     asyncio.run(connect_via_ssh())

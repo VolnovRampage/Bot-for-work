@@ -1,0 +1,23 @@
+{
+  "TELEGRAM": {
+    "token": "5897624315:gtZI2dLI",
+    "admins": [40689]
+  },
+  "NGROK": {
+    "address": "https://6e80-92-242-4-234.ngrok-free.app",
+    "port": 2250
+  },
+  "SSH": {
+    "ip": ["192.168.150.121", "192.168.150.121"],
+    "port": [22, 22],
+    "username": ["expert", "expert"],
+    "password": ["12341234", "12341234"],
+    "path_to_source": ["/home/expert/Desktop/BackUp", "/home/expert/Desktop/BackUp"],
+    "archive_name": ["Archive.zip", "Archive.zip"],
+    "path_to_destination": ["C:\\Users\\vvae\\Desktop\\BackUp\\", "C:\\Users\\volae\\Desktop\\BackUp\\"]
+  },
+  "SCHEDULER": {
+    "hour": 0,
+    "minute": 10
+  }
+}
