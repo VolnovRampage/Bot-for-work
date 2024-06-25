@@ -3,7 +3,7 @@ import asyncio
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 
-from load_data import TOKEN, PORT_NGROK, WEBHOOK_URL, HOUR, MINUTE
+from data.load_data import TOKEN, PORT_NGROK, WEBHOOK_URL, HOUR, MINUTE
 from handlers.private_chat import private_chat_router
 from callbacks.callbacks import callback_router, backup
 from apscheduler.schedulers.asyncio import AsyncIOScheduler

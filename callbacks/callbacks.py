@@ -8,7 +8,7 @@ from ssh_tunnel.connecting import connect_via_ssh, get_file_size
 from keyboards.inline_keyboards import inline_kb
 from logs.logs import write_log, read_log
 
-from load_data import ADMINS
+from data.load_data import ADMINS
 
 
 callback_router = Router()
