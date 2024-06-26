@@ -14,33 +14,16 @@ from data.load_data import ADMINS
 callback_router = Router()
 
 
-def get_date() -> str:
-    return datetime.now().strftime("%H:%M:%S  |  %d/%m/%Y")
-
-
-def make_text(spent_time: float, backup_date: str) -> str: # file_size
-    text: str = (
-        "<b>Backup выполнен:</b>\n"
-        f"<i>  -  Затрачено времени:  {spent_time:.2f} минут.</i>\n"
-        # f"<i>  -  Передано по проводу:  {file_size:.3f} Гб.</i>\n"
-        f"<i>  -  Время и дата:  {backup_date}.</i>"
-    )
-    return text
-
-
 async def backup():
-    start_time = time.time()
     result = await connect_via_ssh()
-    backup_date = get_date()
-    if not isinstance(result, str):
-        spent_time = (time.time() - start_time) / 60
-        # file_size = get_file_size()
-        text: str = make_text(spent_time=spent_time, backup_date=backup_date) # add file_size=file_size
-    else:
-        text: str = f"{result}\n<b>Время и дата:</b>  {backup_date}"
-    await write_log(text=text)
-    return text
-
+    mode: str = ''
+    for index, text in enumerate(result):
+        if index == 0:
+            mode = 'w'
+        else:
+            mode = 'a'
+        await write_log(text=text, mode=mode)
+    return result
 
 
 @callback_router.callback_query(F.data == "backup_sql")
@@ -48,6 +31,7 @@ async def backup_sql(call: types.CallbackQuery):
     if call.from_user.id in ADMINS:
         await call.message.edit_text(text="Начинается BackUp sql файлов")
         text = await backup()
+        text = '\n'.join(text)
         await call.message.edit_text(text=text, reply_markup=inline_kb.as_markup())
     else:
         await call.message.edit_text("У вас нет прав на это.")
