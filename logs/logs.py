@@ -26,9 +26,9 @@ def make_text(ip=None, current_time=None, spent_time=None,
               file_size=None, text=None, err=None):
     if not err:
         text = f"<b>IP:</b> {ip}\n" \
-                    f"<b>Время:</b> {current_time}\n" \
+                    f"<b>Время backup:</b> {current_time}\n" \
                     f"<b>Время затраченное на копирование:</b> {spent_time}\n" \
-                    f"<b>Размер файла:</b> {file_size} Gb\n"
+                    f"<b>Размер архива:</b> {file_size} Gb\n"
         return text
     text =  f"<b>IP:</b>  {ip}\n" \
                  f"<b>{text}:</b> {err}\n"

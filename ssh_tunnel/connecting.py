@@ -69,16 +69,20 @@ async def connect_via_ssh():
             async with asyncssh.connect(
                 host=data[0], port=data[1], username=data[2], password=data[3]
             ) as conn:
+                print(1)
                 await create_archive(conn=conn,
                                      path_to_source=data[4],
                                      path_to_archive=data[5])
+                print(2)
                 await send_archive(conn=conn,
                                    path_to_archive=data[5],
                                    path_to_destination=data[7],
                                    archive_name=data[6])
+                print(3)
                 await remove_archive(conn=conn,
                                      path_to_archive=data[5],
                                      operating_sys=data[8])
+                print(4)
                 file_size = get_file_size(path_to_destination=data[7],
                                                  archive_name=data[6])
                 spend_time = get_time(start=start)
