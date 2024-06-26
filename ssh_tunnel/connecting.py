@@ -22,7 +22,7 @@ async def merge_data():
 async def create_archive(conn: asyncssh.SSHClientConnection,
                          path_to_source: str,
                          path_to_archive: str):
-    create_archive = f"7z a -tzip -mx1 {path_to_archive} {path_to_source}"
+    create_archive = f"7za a -tzip -mx1 {path_to_archive} {path_to_source}"
     await conn.run(create_archive, check=True)
     return conn
 
