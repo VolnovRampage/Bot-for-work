@@ -7,6 +7,8 @@ LOG_PATH = os.path.join(os.path.join(os.getcwd(), "logs"), "backup_log.txt")
 
 async def write_log(text: str, mode: str):
     async with aiofiles.open(LOG_PATH, mode=mode, encoding='utf-8') as log_file:
+        if mode == "a":
+            text = '\n' + text
         await log_file.write(text)
 
 
@@ -19,7 +21,7 @@ async def read_log():
             text += line
         return text
     else:
-        return f"<b>Нет записей в логе.</b>"
+        return "<b>Нет записей в логе.</b>"
 
 
 def make_text(ip=None, current_time=None, spent_time=None,
