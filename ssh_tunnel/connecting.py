@@ -46,7 +46,7 @@ async def remove_archive(conn: asyncssh.SSHClientConnection,
 def get_file_size(path_to_destination: str,
                   archive_name: str) -> float:
     file_size = os.path.getsize(os.path.join(path_to_destination, archive_name))
-    file_size = file_size / 1000000000
+    file_size = file_size / (1024 ** 3)
     return f'{file_size:.3f}'
 
 
