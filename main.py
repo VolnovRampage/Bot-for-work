@@ -1,17 +1,15 @@
 import asyncio
-
+import aiocron
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
-
 from data.load_data import TOKEN, PORT_NGROK, WEBHOOK_URL, HOUR, MINUTE
 from handlers.private_chat import private_chat_router
 from callbacks.callbacks import callback_router, backup
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
 
+bot = Bot(token=TOKEN, parse_mode='HTML')
+dp = Dispatcher()
 
-bot: Bot = Bot(token=TOKEN, parse_mode='HTML')
-dp: Dispatcher = Dispatcher()
+CRON: str = f'{MINUTE} {HOUR} * * *'
 
 dp.include_routers(
     private_chat_router,
@@ -20,38 +18,27 @@ dp.include_routers(
 
 
 async def schedule_task():
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(backup, CronTrigger(hour=HOUR, minute=MINUTE))
-    scheduler.start()
-    try:
-        await asyncio.sleep(86400)
-    except asyncio.CancelledError as err:
-        print(err)
-    finally:
-        scheduler.shutdown()
-
+    await backup()
 
 async def on_startup(app):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
     await bot.delete_my_commands()
-    asyncio.create_task(schedule_task())
+    aiocron.crontab(CRON, func=schedule_task)
 
 async def on_shutdown(app):
     await bot.delete_webhook(drop_pending_updates=True)
 
-
 async def handle_webhook(request):
-    url: str = str(request.url)
-    index: int = url.rfind('/')
-    token: str = url[index + 1:]
+    url = str(request.url)
+    index = url.rfind('/')
+    token = url[index + 1:]
     if token == TOKEN:
         data = await request.json()
         update = types.Update(**data)
-        await dp._process_update(bot,update)
+        await dp._process_update(bot, update)
         return web.Response()
     else:
         return web.Response(status=403)
-
 
 app = web.Application()
 app.router.add_post(f'/{TOKEN}', handle_webhook)

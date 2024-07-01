@@ -4,15 +4,15 @@ import json
 with open('data/data.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
 
-#Telegram
+# Telegram
 TOKEN: str = data['TELEGRAM']['token']
 
-#Ngrok
+# Ngrok
 NGROK: str  = data['NGROK']['address']
 WEBHOOK_URL: str = f'{NGROK}/{TOKEN}'
 PORT_NGROK: int = data['NGROK']['port']
 
-#Scheduler
+# Scheduler
 HOUR: int = data['SCHEDULER']['hour']
 MINUTE: int = data['SCHEDULER']['minute']
 
