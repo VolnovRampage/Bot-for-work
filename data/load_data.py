@@ -4,6 +4,7 @@ import json
 with open('data/data.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
 
+
 # Telegram
 TOKEN: str = data['TELEGRAM']['token']
 

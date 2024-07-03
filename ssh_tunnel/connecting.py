@@ -8,7 +8,6 @@ from data.load_data import (IP_SERVERS, PORTS_SSH, USERS, PASSWORDS, PATHS_TO_SO
 from logs.logs import make_text
 
 
-
 async def merge_data():
     for (ip, port, user, password, path_source, path_to_archive,
         archive_name, path_dest, operating_sys) in zip_longest(
@@ -55,7 +54,6 @@ def get_time(start: datetime):
     hours, remainder = divmod(elapsed.total_seconds(), 3600)
     minutes, seconds = divmod(remainder, 60)
     return f'{int(hours):02}:{int(minutes):02}:{int(seconds):02}'
-
 
 
 async def connect_via_ssh():
