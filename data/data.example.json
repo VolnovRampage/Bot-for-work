@@ -13,7 +13,7 @@
     "username": ["expert", "expert"],
     "password": ["12341234", "12341234"],
     "path_to_source": ["/home/expert/Desktop/BackUp", "/home/expert/Desktop/BackUp"],
-    "archive_name": ["Archive.zip", "Archive.zip"],
+    "archive_name": ["Archive", "Archive"],
     "path_to_destination": ["C:\\Users\\vvae\\Desktop\\BackUp\\", "C:\\Users\\volae\\Desktop\\BackUp\\"]
   },
   "SCHEDULER": {
