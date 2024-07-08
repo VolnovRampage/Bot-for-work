@@ -1,6 +1,8 @@
 #!/bin/bash
 
-sudo apt install python3.12-venv
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install -y python3.12 python3.12-venv
 
 if [ ! -d "venv" ]; then
     python3 -m venv venv
